@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Functional Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .calculator {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .calculator input[type="text"] {
+      width: 100%;
+      height: 60px;
+      background-color: #f0f0f0;
+      border: none;
+      font-size: 24px;
+      text-align: right;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .calculator button {
+      width: 70px;
+      height: 70px;
+      background-color: #536493;
+      color: white;
+      border: none;
+      font-size: 24px;
+      border-radius: 10px;
+      margin: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .calculator button:hover {
+      background-color: #EF5A6F;
+    }
+
+    .calculator .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 70px);
+      grid-gap: 10px;
+    }
+
+    .calculator .equals {
+      grid-column: span 2;
+      background-color: #D4BDAC;
+      color: #fff;
+    }
+
+    .calculator .clear {
+      background-color: #EF5A6F;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <input type="text" id="display" readonly>
+
+    <div class="buttons">
+      <button onclick="appendNumber('1')">1</button>
+      <button onclick="appendNumber('2')">2</button>
+      <button onclick="appendNumber('3')">3</button>
+      <button onclick="appendOperator('+')">+</button>
+
+      <button onclick="appendNumber('4')">4</button>
+      <button onclick="appendNumber('5')">5</button>
+      <button onclick="appendNumber('6')">6</button>
+      <button onclick="appendOperator('-')">-</button>
+
+      <button onclick="appendNumber('7')">7</button>
+      <button onclick="appendNumber('8')">8</button>
+      <button onclick="appendNumber('9')">9</button>
+      <button onclick="appendOperator('*')">*</button>
+
+      <button onclick="clearDisplay()" class="clear">C</button>
+      <button onclick="appendNumber('0')">0</button>
+      <button onclick="calculateResult()" class="equals">=</button>
+      <button onclick="appendOperator('/')">/</button>
+    </div>
+  </div>
+
+  <script>
+    let display = document.getElementById("display");
+    let currentInput = "";
+    let currentOperator = null;
+    let previousInput = null;
+
+    // Append numbers to the display
+    function appendNumber(number) {
+      currentInput += number;
+      updateDisplay(currentInput);
+    }
+
+    // Append operators to the display and store previous input
+    function appendOperator(operator) {
+      if (currentInput === "") return; // Prevent starting with an operator
+      if (currentOperator !== null) calculateResult(); // Calculate if there's already an operator
+
+      previousInput = currentInput;
+      currentOperator = operator;
+      currentInput = "";
+    }
+
+    // Calculate and display the result
+    function calculateResult() {
+      if (currentInput === "" || previousInput === null) return;
+
+      let result;
+      let prev = parseFloat(previousInput);
+      let curr = parseFloat(currentInput);
+
+      switch (currentOperator) {
+        case "+":
+          result = prev + curr;
+          break;
+        case "-":
+          result = prev - curr;
+          break;
+        case "*":
+          result = prev * curr;
+          break;
+        case "/":
+          result = prev / curr;
+          break;
+        default:
+          return;
+      }
+
+      updateDisplay(result);
+      currentInput = result.toString();
+      previousInput = null;
+      currentOperator = null;
+    }
+
+    // Clear the display
+    function clearDisplay() {
+      currentInput = "";
+      previousInput = null;
+      currentOperator = null;
+      updateDisplay("0");
+    }
+
+    // Update the calculator display
+    function updateDisplay(value) {
+      display.value = value;
+    }
+  </script>
+
+</body>
+</html>
